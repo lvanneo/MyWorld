@@ -27,11 +27,11 @@ func handleConnection(conn net.Conn) {
 }
       
 func main() {
-    ln, err := net.Listen("tcp", ":6010")
+    ln, err := net.Listen("tcp", ":4440")
     if err != nil {
         panic(err)
     }
-      
+    
     for {
         conn, err := ln.Accept()
         if err != nil {

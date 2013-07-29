@@ -4,45 +4,67 @@ import (
     "fmt"
     "github.com/drone/routes"
     "net/http"
+    "io/ioutil"
+    "encoding/json"
 )
 
+type InfoObject struct{
+
+	ProductName string
+	
+	Price float32
+}
+
 func getuser(w http.ResponseWriter, r *http.Request) {
-    fmt.Printf("Get\n")
     params := r.URL.Query()
     uid := params.Get(":uid")
     fmt.Fprintf(w, "you are get user %s", uid)
+    
+    fmt.Printf("Get  %s \n", uid)
 }
 
 func modifyuser(w http.ResponseWriter, r *http.Request) {
-    fmt.Printf("Post\n")
     params := r.URL.Query()
     uid := params.Get(":uid")
-    productName := params.Get("productName")
+    productName := params.Get("ProductName")
     fmt.Fprintf(w, "you are modify user %s -- %s", uid , productName)
-    fmt.Printf("Post : %s  %s\n", uid, productName)
     
     input,err:=ioutil.ReadAll(r.Body)
     if err != nil {
     	fmt.Printf("error")
     }
-    str := input.Get("productName")
-    fmt.Print(":" + str)
+    fmt.Printf("Post  %s  %s\n", uid, input)
+//    fmt.Printf("input : %s \n",input)
+//    fmt.Printf("%#v\n", input[0])
+    
+    var jsonInfo InfoObject
+    json.Unmarshal(input,&jsonInfo)
+    fmt.Printf(jsonInfo.ProductName)
     
 //    fmt.Printf(params)
 }
 
 func deleteuser(w http.ResponseWriter, r *http.Request) {
-    fmt.Printf("Delete\n")
     params := r.URL.Query()
     uid := params.Get(":uid")
     fmt.Fprintf(w, "you are delete user %s", uid)
+    fmt.Printf("Delete  %s \n", uid)
 }
 
 func adduser(w http.ResponseWriter, r *http.Request) {
-    fmt.Printf("Put\n")
     params := r.URL.Query()
     uid := params.Get(":uid")
     fmt.Fprint(w, "you are add user %s", uid)
+    
+    input,err:=ioutil.ReadAll(r.Body)
+    if err != nil {
+    	fmt.Printf("error")
+    }
+    fmt.Printf("Put %s %s \n", uid, input)
+//    fmt.Printf("input : %s \n",input)
+    
+//    fmt.Printf("%#v\n", input[0])
+    
 }
 
 func query(w http.ResponseWriter, r *http.Request){

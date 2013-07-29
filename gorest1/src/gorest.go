@@ -20,6 +20,14 @@ func modifyuser(w http.ResponseWriter, r *http.Request) {
     productName := params.Get("productName")
     fmt.Fprintf(w, "you are modify user %s -- %s", uid , productName)
     fmt.Printf("Post : %s  %s\n", uid, productName)
+    
+    input,err:=ioutil.ReadAll(r.Body)
+    if err != nil {
+    	fmt.Printf("error")
+    }
+    str := input.Get("productName")
+    fmt.Print(":" + str)
+    
 //    fmt.Printf(params)
 }
 

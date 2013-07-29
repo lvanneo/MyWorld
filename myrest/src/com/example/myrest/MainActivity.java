@@ -43,6 +43,7 @@ public class MainActivity extends Activity {
 	private TextView txtView;
 	private EditText editTextShow;
 	private EditText editTextInput;
+	private EditText editTextIP;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +53,7 @@ public class MainActivity extends Activity {
 		this.txtView = (TextView)findViewById(R.id.textView1);
 		this.editTextShow = (EditText)findViewById(R.id.editTextShow);
 		this.editTextInput = (EditText)findViewById(R.id.editTextInput);
+		this.editTextIP = (EditText)findViewById(R.id.editTextIP);
 		
 		this.butGet = (Button)findViewById(R.id.butGet);		
 		this.butGet.setOnClickListener(new OnClickListener() {
@@ -62,7 +64,7 @@ public class MainActivity extends Activity {
 				//创建一个http客户端  
 				HttpClient client=new DefaultHttpClient();  
 				//创建一个GET请求  
-				HttpGet httpGet=new HttpGet("http://192.168.1.101:8088/user/:uid=" + editTextInput.getText().toString());  
+				HttpGet httpGet=new HttpGet("http://" + editTextIP.getText().toString() +":8088/user/:uid=" + editTextInput.getText().toString());  
 				//向服务器发送请求并获取服务器返回的结果  
 				HttpResponse response = null;
 				try {
@@ -123,11 +125,11 @@ public class MainActivity extends Activity {
 				//创建一个http客户端  
 				HttpClient client=new DefaultHttpClient();  
 				//创建一个POST请求  
-				HttpPost httpPost=new HttpPost("http://192.168.1.101:8088/user/:uid=22");  
+				HttpPost httpPost=new HttpPost("http://" + editTextIP.getText().toString() +":8088/user/:uid=" + editTextInput.getText().toString());  
 				//组装数据放到HttpEntity中发送到服务器  
 				final List dataList = new ArrayList();  
-				dataList.add(new BasicNameValuePair("productName", "cat"));  
-				dataList.add(new BasicNameValuePair("price", "14.87"));  
+				dataList.add(new BasicNameValuePair("ProductName", "cat"));  
+				dataList.add(new BasicNameValuePair("Price", "14.87"));  
 				HttpEntity entity = null;
 				try {
 					entity = new UrlEncodedFormEntity(dataList, "UTF-8");
@@ -196,10 +198,10 @@ public class MainActivity extends Activity {
 				//创建一个http客户端  
 				HttpClient client=new DefaultHttpClient();  
 				//创建一个PUT请求  
-				HttpPut httpPut=new HttpPut("http://192.168.1.101:8088/user/");  
+				HttpPut httpPut=new HttpPut("http://" + editTextIP.getText().toString() +":8088/user/");  
 				//组装数据放到HttpEntity中发送到服务器  
 				final List dataList = new ArrayList();  
-				dataList.add(new BasicNameValuePair("price", "11.99"));  
+				dataList.add(new BasicNameValuePair("Price", "11.99"));  
 				HttpEntity entity = null;
 				try {
 					entity = new UrlEncodedFormEntity(dataList, "UTF-8");
@@ -259,7 +261,7 @@ public class MainActivity extends Activity {
 				//创建一个http客户端  
 				HttpClient client=new DefaultHttpClient();  
 				//创建一个DELETE请求  
-				HttpDelete httpDelete=new HttpDelete("http://192.168.1.101:8088/user/:uid=22");  
+				HttpDelete httpDelete=new HttpDelete("http://" + editTextIP.getText().toString() +":8088/user/:uid=" + editTextInput.getText().toString());  
 				
 				HttpResponse response = null;
 				//向服务器发送DELETE请求并获取服务器返回的结果，可能是删除成功，或者失败等信息  

@@ -11,6 +11,7 @@ import java.util.List;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
@@ -22,6 +23,9 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -127,15 +131,33 @@ public class MainActivity extends Activity {
 				//创建一个POST请求  
 				HttpPost httpPost=new HttpPost("http://" + editTextIP.getText().toString() +":8088/user/:uid=" + editTextInput.getText().toString());  
 				//组装数据放到HttpEntity中发送到服务器  
-				final List dataList = new ArrayList();  
-				dataList.add(new BasicNameValuePair("ProductName", "cat"));  
-				dataList.add(new BasicNameValuePair("Price", "14.87"));  
+				final List<NameValuePair> dataList = new ArrayList<NameValuePair>();  
+//				dataList.add(new BasicNameValuePair("ProductName", "cat"));  
+//				dataList.add(new BasicNameValuePair("Price", "14.87"));  
+				
+				JSONObject person = null;
+				try {  
+					person = new JSONObject();
+				    person.put("ProductName", "yuanzhifei89");  
+				    person.put("Price", 15.3);  
+				} catch (JSONException ex) {  
+				    // 键为null或使用json不支持的数字格式(NaN, infinities)  
+				    throw new RuntimeException(ex);  
+				}
+				
+				Log.i("json", person.toString());
+				String strt = person.toString();
+				
+				dataList.add(new BasicNameValuePair("0", strt ));
+				
 				HttpEntity entity = null;
 				try {
-					entity = new UrlEncodedFormEntity(dataList, "UTF-8");
+					entity = new UrlEncodedFormEntity(dataList);
+//					entity = new UrlEncodedFormEntity(dataList, "UTF-8");
 				} catch (UnsupportedEncodingException e) {
 					e.printStackTrace();
 				}  
+				
 				httpPost.setEntity(entity);  
 				
 				Log.i("Post", httpPost.getURI().toString());

@@ -6,15 +6,16 @@ import (
     "net/http"
     "log"
     "os"
+    "time"
 )
 
-// 获取大小的借口
+// 获取大小的接口
 type Sizer interface {
     Size() int64
 }
 
-// hello world, the web server
-func HelloServer(w http.ResponseWriter, r *http.Request) {
+//处理文件上传的 Web服务方法 
+func UploadServer(w http.ResponseWriter, r *http.Request) {
     if "POST" == r.Method {
     
         file, h, err := r.FormFile("userfile")
@@ -23,15 +24,18 @@ func HelloServer(w http.ResponseWriter, r *http.Request) {
             return
         }
         
-//    	name := r.Form["uploadfile"]
+		//name := r.Form["uploadfile"]
+		//获取文件名
         filename := h.Filename
         
         defer file.Close()
         f,err:=os.Create(filename)
         defer f.Close()
         io.Copy(f,file)
+
 		fmt.Fprintf(w, "上传文件的大小为: %d", file.(Sizer).Size())
-		fmt.Printf("上传文件的大小为: %d  名称：%s\n", file.(Sizer).Size(), filename)
+		fmt.Printf("%s  Size: %d  Name：%s\n", time.Now().Format("2006-01-02 15:04:05"), file.(Sizer).Size(), filename)
+//		fmt.Println(time.Now().Format("2006-01-02 15:04:05"))
 		
         return
     }
@@ -49,7 +53,7 @@ func HelloServer(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-    http.HandleFunc("/hello", HelloServer)
+    http.HandleFunc("/upload", UploadServer)
     err := http.ListenAndServe(":8086", nil)
     if err != nil {
         log.Fatal("ListenAndServe: ", err)

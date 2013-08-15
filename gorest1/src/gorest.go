@@ -6,6 +6,7 @@ import (
     "net/http"
     "io/ioutil"
     "encoding/json"
+    "strings"
 )
 
 type InfoObject struct{
@@ -34,17 +35,22 @@ func modifyuser(w http.ResponseWriter, r *http.Request) {
     if err != nil {
     	fmt.Printf("error")
     }
-    fmt.Printf("Post  %s  %s\n", uid, input)
+    
+//    fmt.Printf("Post  %s  %s\n", uid, input)
 //    fmt.Printf("input : %s \n",input)
 //    fmt.Printf("%#v\n", input[0])
     var sss []byte = input[2:]
-    //sss = "%7B%22ProductName%22%3A%22yuanzhifei89%22%2C%22Price%22%3A15.3%7D"
     
+//    fmt.Println(sss) 
+    
+    jstr := URLJsonDecoder(string(sss))
     
     var jsonInfo InfoObject
-    json.Unmarshal(sss,&jsonInfo)
-    fmt.Printf(jsonInfo.ProductName)
-    fmt.Printf("%s", sss)
+    json.Unmarshal([]byte(jstr),&jsonInfo)
+    fmt.Println(jstr)
+    fmt.Printf("name:  %s \n", jsonInfo.ProductName)
+    fmt.Printf("price:  %f \n", jsonInfo.Price)
+    fmt.Println("price: ",jsonInfo.Price)
     
 }
 
@@ -78,6 +84,15 @@ func query(w http.ResponseWriter, r *http.Request){
     fmt.Fprintf(w, "query %s", uid)
 }
 
+func URLJsonDecoder(jsonStr string) (json string){
+	jsonStr = strings.Replace(jsonStr, "%7B", "{" , -1)
+	jsonStr = strings.Replace(jsonStr, "%7D", "}" , -1)
+	jsonStr = strings.Replace(jsonStr, "%22", "\"" , -1)
+	jsonStr = strings.Replace(jsonStr, "%3A", ":" , -1)
+	jsonStr = strings.Replace(jsonStr, "%2C", "," , -1)
+	
+	return jsonStr
+}
 
 func main() {
     mux := routes.New()

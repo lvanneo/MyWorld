@@ -27,8 +27,10 @@ func getuser(w http.ResponseWriter, r *http.Request) {
 func modifyuser(w http.ResponseWriter, r *http.Request) {
     params := r.URL.Query()
     uid := params.Get(":uid")
+	/*
     productName := params.Get("ProductName")
     fmt.Fprintf(w, "you are modify user %s -- %s", uid , productName)
+    */
     
     defer r.Body.Close()
     input,err:=ioutil.ReadAll(r.Body)
@@ -36,12 +38,8 @@ func modifyuser(w http.ResponseWriter, r *http.Request) {
     	fmt.Printf("error")
     }
     
-//    fmt.Printf("Post  %s  %s\n", uid, input)
-//    fmt.Printf("input : %s \n",input)
 //    fmt.Printf("%#v\n", input[0])
     var sss []byte = input[2:]
-    
-//    fmt.Println(sss) 
     
     jstr := URLJsonDecoder(string(sss))
     
@@ -51,7 +49,7 @@ func modifyuser(w http.ResponseWriter, r *http.Request) {
     fmt.Printf("name:  %s \n", jsonInfo.ProductName)
     fmt.Printf("price:  %f \n", jsonInfo.Price)
     fmt.Println("price: ",jsonInfo.Price)
-    
+    fmt.Fprintf(w, "you are modify user：%s - %s" , uid, jsonInfo.ProductName)
 }
 
 func deleteuser(w http.ResponseWriter, r *http.Request) {

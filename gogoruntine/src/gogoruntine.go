@@ -18,8 +18,7 @@ func main() {
     c := make(chan int)
     go sum(a[:len(a)/2], c)
     go sum(a[len(a)/2:], c)	
-    // receive from c
-    x, y := <- c, <- c
+    x, y := <- c, <- c    // receive from c
     fmt.Println(x, y, x + y)
 
 	go testRange(10, c)
@@ -30,7 +29,6 @@ func main() {
 
 }
 
-
 func testRange(n int, c chan int){
 	x, y := 1, 1
 	
@@ -40,5 +38,6 @@ func testRange(n int, c chan int){
 	}
 	
 	close(c)
+	
 	
 }

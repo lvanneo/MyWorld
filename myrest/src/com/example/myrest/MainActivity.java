@@ -86,7 +86,7 @@ public class MainActivity extends Activity {
 				//创建一个http客户端  
 				HttpClient client=new DefaultHttpClient();  
 				//创建一个GET请求  
-				HttpGet httpGet=new HttpGet("http://" + editTextIP.getText().toString() +":8088/query/:uid=" + editTextInput.getText().toString());  
+				HttpGet httpGet=new HttpGet("http://" + editTextIP.getText().toString() +":8088/people/:uid=" + editTextInput.getText().toString());  
 				//向服务器发送请求并获取服务器返回的结果  
 				HttpResponse response = null;
 				try {
@@ -147,7 +147,7 @@ public class MainActivity extends Activity {
 				//创建一个http客户端  
 				HttpClient client=new DefaultHttpClient();  
 				//创建一个POST请求  
-				HttpPost httpPost=new HttpPost("http://" + editTextIP.getText().toString() +":8088/add/:uid=" + editTextInput.getText().toString());  
+				HttpPost httpPost=new HttpPost("http://" + editTextIP.getText().toString() +":8088/people/:uid=" + editTextInput.getText().toString());  
 				//组装数据放到HttpEntity中发送到服务器  
 				final List<NameValuePair> dataList = new ArrayList<NameValuePair>();  
 //				dataList.add(new BasicNameValuePair("ProductName", "cat"));  
@@ -156,7 +156,7 @@ public class MainActivity extends Activity {
 				JSONObject person = null;
 				try {  
 					person = new JSONObject();
-					person.put("id", 0);  
+					person.put("id", Integer.parseInt(editTextInput.getText().toString()));  
 				    person.put("name", editTextName.getText().toString());  
 //				    person.put("age", editTextAge.getText().toString());  
 				    person.put("age", Integer.parseInt(editTextAge.getText().toString()));  
@@ -172,7 +172,7 @@ public class MainActivity extends Activity {
 				
 				HttpEntity entity = null;
 				try {
-					entity = new UrlEncodedFormEntity(dataList);
+					entity = new UrlEncodedFormEntity(dataList, "UTF-8");
 //					entity = new UrlEncodedFormEntity(dataList, "UTF-8");
 				} catch (UnsupportedEncodingException e) {
 					e.printStackTrace();
@@ -240,10 +240,26 @@ public class MainActivity extends Activity {
 				//创建一个http客户端  
 				HttpClient client=new DefaultHttpClient();  
 				//创建一个PUT请求  
-				HttpPut httpPut=new HttpPut("http://" + editTextIP.getText().toString() +":8088/user/");  
+				HttpPut httpPut=new HttpPut("http://" + editTextIP.getText().toString() +":8088/people/");  
 				//组装数据放到HttpEntity中发送到服务器  
-				final List dataList = new ArrayList();  
-				dataList.add(new BasicNameValuePair("Price", "11.99"));  
+				final List dataList = new ArrayList(); 
+				
+				JSONObject person = null;
+				try {  
+					person = new JSONObject();
+					person.put("id", 0);  
+				    person.put("name", editTextName.getText().toString());  
+//				    person.put("age", editTextAge.getText().toString());  
+				    person.put("age", Integer.parseInt(editTextAge.getText().toString()));  
+				} catch (JSONException ex) {  
+				    // 键为null或使用json不支持的数字格式(NaN, infinities)  
+				    throw new RuntimeException(ex);  
+				}
+				
+				Log.i("json", person.toString());
+				String strt = person.toString();
+				
+				dataList.add(new BasicNameValuePair("0", strt));  
 				HttpEntity entity = null;
 				try {
 					entity = new UrlEncodedFormEntity(dataList, "UTF-8");
@@ -303,7 +319,7 @@ public class MainActivity extends Activity {
 				//创建一个http客户端  
 				HttpClient client=new DefaultHttpClient();  
 				//创建一个DELETE请求  
-				HttpDelete httpDelete=new HttpDelete("http://" + editTextIP.getText().toString() +":8088/user/:uid=" + editTextInput.getText().toString());  
+				HttpDelete httpDelete=new HttpDelete("http://" + editTextIP.getText().toString() +":8088/people/:uid=" + editTextInput.getText().toString());  
 				
 				HttpResponse response = null;
 				//向服务器发送DELETE请求并获取服务器返回的结果，可能是删除成功，或者失败等信息  

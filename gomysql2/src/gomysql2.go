@@ -18,6 +18,36 @@ func main() {
     }
     defer db.Close()
 
+	//插入数据
+	stmtIns, err := db.Prepare("INSERT INTO people(name,age) VALUES( ?, ? )" ) // ? = 占位符
+	if err != nil {
+		panic(err.Error())
+	}
+	defer stmtIns.Close() // main结束是关闭
+
+	// sql参数
+    result, err := stmtIns.Exec("豆蔻", "22")
+    if err != nil {
+        panic(err)
+    }
+
+
+	// 获取影响的行数
+    affect, err := result.RowsAffected()
+    if err != nil {
+        panic(err)
+    }
+    fmt.Printf("影响的行数: %d\n", affect)
+
+	// 获取自增id
+    id, err := result.LastInsertId()
+    if err != nil {
+        panic(err)
+    }
+    fmt.Printf("自增ID: %d\n", id)
+
+
+	//查询数据
     // topic是我本地数据库的表名，需要替换你自己的表名，这里面的英文注释都是引用github官网的~~
     //  嘿嘿 我只是想跑起来看看
     rows, err := db.Query("SELECT * FROM people")
@@ -64,4 +94,8 @@ func main() {
         }
         fmt.Println("-----------------------------------")
     }
+}
+
+func insert(){
+	
 }

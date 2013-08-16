@@ -8,12 +8,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity" >
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
-
     <Button
         android:id="@+id/butDelete"
         android:layout_width="wrap_content"
@@ -21,14 +15,6 @@
         android:layout_alignBottom="@+id/butPut"
         android:layout_alignLeft="@+id/butPost"
         android:text="Delete" />
-
-    <Button
-        android:id="@+id/butPut"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/butGet"
-        android:layout_centerVertical="true"
-        android:text="Put" />
 
     <Button
         android:id="@+id/butPost"
@@ -48,15 +34,6 @@
         android:text="Clear" />
 
     <EditText
-        android:id="@+id/editTextShow"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_below="@+id/butDelete"
-        android:layout_marginTop="47dp"
-        android:ems="10" />
-
-    <EditText
         android:id="@+id/editTextIP"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -64,25 +41,61 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="22dp"
         android:ems="10"
-        android:text="192.168.1.8" />
+        android:text="192.168.1.7" />
 
     <EditText
         android:id="@+id/editTextInput"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_below="@+id/textView1"
-        android:layout_marginTop="26dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/butPost"
+        android:ems="10" />
+
+    <EditText
+        android:id="@+id/editTextName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/editTextInput"
+        android:layout_below="@+id/editTextInput"
+        android:ems="10" >
+
+        <requestFocus />
+    </EditText>
+
+    <Button
+        android:id="@+id/butPut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/editTextIP"
+        android:layout_alignLeft="@+id/editTextShow"
+        android:layout_marginBottom="71dp"
+        android:layout_marginLeft="16dp"
+        android:text="Put" />
+
+    <EditText
+        android:id="@+id/editTextShow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/editTextIP"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="21dp"
         android:ems="10" />
 
     <Button
         android:id="@+id/butGet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/editTextInput"
-        android:layout_below="@+id/editTextInput"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="32dp"
+        android:layout_alignLeft="@+id/butPut"
+        android:layout_centerVertical="true"
         android:text="Get" />
+
+    <EditText
+        android:id="@+id/editTextAge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/editTextName"
+        android:layout_below="@+id/editTextName"
+        android:layout_marginTop="24dp"
+        android:ems="10" />
 
 </RelativeLayout>

@@ -7,7 +7,6 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -26,8 +25,11 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
+import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.util.Log;
 import android.view.Menu;
@@ -37,6 +39,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+@TargetApi(Build.VERSION_CODES.GINGERBREAD)
 public class MainActivity extends Activity {
 	
 	private Button butGet;
@@ -44,20 +47,35 @@ public class MainActivity extends Activity {
 	private Button butPost;
 	private Button butPut;
 	private Button butDelete;
-	private TextView txtView;
+//	private TextView txtView;
 	private EditText editTextShow;
 	private EditText editTextInput;
 	private EditText editTextIP;
+	
+	private EditText editTextName;
+	private EditText editTextAge;
+	
 
+	@TargetApi(Build.VERSION_CODES.GINGERBREAD)
+	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		this.txtView = (TextView)findViewById(R.id.textView1);
+        //-------------------------------------
+        //在3.0 及以上版本socket通信不能在UI线程中实现，只能另启线程实现，通过以下连个方法可解决次问题
+		StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectDiskReads().detectDiskWrites().detectNetwork().penaltyLog().build());
+		StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectLeakedSqlLiteObjects().penaltyLog().penaltyDeath().build());
+        //-------------------------------------
+
+		
+//		this.txtView = (TextView)findViewById(R.id.textView1);
 		this.editTextShow = (EditText)findViewById(R.id.editTextShow);
 		this.editTextInput = (EditText)findViewById(R.id.editTextInput);
 		this.editTextIP = (EditText)findViewById(R.id.editTextIP);
+		this.editTextName = (EditText)findViewById(R.id.editTextName);
+		this.editTextAge = (EditText)findViewById(R.id.editTextAge);
 		
 		this.butGet = (Button)findViewById(R.id.butGet);		
 		this.butGet.setOnClickListener(new OnClickListener() {
@@ -68,7 +86,7 @@ public class MainActivity extends Activity {
 				//创建一个http客户端  
 				HttpClient client=new DefaultHttpClient();  
 				//创建一个GET请求  
-				HttpGet httpGet=new HttpGet("http://" + editTextIP.getText().toString() +":8088/user/:uid=" + editTextInput.getText().toString());  
+				HttpGet httpGet=new HttpGet("http://" + editTextIP.getText().toString() +":8088/query/:uid=" + editTextInput.getText().toString());  
 				//向服务器发送请求并获取服务器返回的结果  
 				HttpResponse response = null;
 				try {
@@ -129,7 +147,7 @@ public class MainActivity extends Activity {
 				//创建一个http客户端  
 				HttpClient client=new DefaultHttpClient();  
 				//创建一个POST请求  
-				HttpPost httpPost=new HttpPost("http://" + editTextIP.getText().toString() +":8088/user/:uid=" + editTextInput.getText().toString());  
+				HttpPost httpPost=new HttpPost("http://" + editTextIP.getText().toString() +":8088/add/:uid=" + editTextInput.getText().toString());  
 				//组装数据放到HttpEntity中发送到服务器  
 				final List<NameValuePair> dataList = new ArrayList<NameValuePair>();  
 //				dataList.add(new BasicNameValuePair("ProductName", "cat"));  
@@ -138,8 +156,10 @@ public class MainActivity extends Activity {
 				JSONObject person = null;
 				try {  
 					person = new JSONObject();
-				    person.put("ProductName", "yuanzhifei89");  
-				    person.put("Price", 15.3);  
+					person.put("id", 0);  
+				    person.put("name", editTextName.getText().toString());  
+//				    person.put("age", editTextAge.getText().toString());  
+				    person.put("age", Integer.parseInt(editTextAge.getText().toString()));  
 				} catch (JSONException ex) {  
 				    // 键为null或使用json不支持的数字格式(NaN, infinities)  
 				    throw new RuntimeException(ex);  

@@ -6,7 +6,9 @@ import (
     "net/http"
     "io/ioutil"
     "encoding/json"
+//    "encoding/gob"
     "strings"
+//    "bytes"
 )
 
 type InfoObject struct{
@@ -27,10 +29,8 @@ func getuser(w http.ResponseWriter, r *http.Request) {
 func modifyuser(w http.ResponseWriter, r *http.Request) {
     params := r.URL.Query()
     uid := params.Get(":uid")
-	/*
-    productName := params.Get("ProductName")
-    fmt.Fprintf(w, "you are modify user %s -- %s", uid , productName)
-    */
+//    productName := params.Get("ProductName")
+//    fmt.Fprintf(w, "you are modify user %s -- %s", uid , productName)
     
     defer r.Body.Close()
     input,err:=ioutil.ReadAll(r.Body)
@@ -38,18 +38,17 @@ func modifyuser(w http.ResponseWriter, r *http.Request) {
     	fmt.Printf("error")
     }
     
-//    fmt.Printf("%#v\n", input[0])
     var sss []byte = input[2:]
     
-    jstr := URLJsonDecoder(string(sss))
+    jsonStr := URLJsonDecoder(string(sss))
+    fmt.Printf("%s\n", jsonStr)
     
     var jsonInfo InfoObject
-    json.Unmarshal([]byte(jstr),&jsonInfo)
-    fmt.Println(jstr)
-    fmt.Printf("name:  %s \n", jsonInfo.ProductName)
-    fmt.Printf("price:  %f \n", jsonInfo.Price)
-    fmt.Println("price: ",jsonInfo.Price)
-    fmt.Fprintf(w, "you are modify user：%s - %s" , uid, jsonInfo.ProductName)
+    json.Unmarshal([]byte(jsonStr),&jsonInfo)
+    fmt.Println("Name: ", jsonInfo.ProductName)
+    fmt.Println("Price: ", jsonInfo.Price)
+    
+    fmt.Fprintf(w, "you are modify user %s - %s", uid , jsonInfo.ProductName)
 }
 
 func deleteuser(w http.ResponseWriter, r *http.Request) {
@@ -91,6 +90,7 @@ func URLJsonDecoder(jsonStr string) (json string){
 	
 	return jsonStr
 }
+
 
 func main() {
     mux := routes.New()

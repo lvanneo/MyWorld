@@ -10,6 +10,7 @@ import (
 func handleConnection(conn net.Conn) {
 	for {
 	    data, err := bufio.NewReader(conn).ReadString('\n')
+//	    data, err := bufio.NewReader(conn).ReadBytes('\n')
 	    if err != nil {
 	        log.Fatal("get client data error: ", err)
 	    }
@@ -27,7 +28,7 @@ func handleConnection(conn net.Conn) {
 }
       
 func main() {
-    ln, err := net.Listen("tcp", ":4440")
+    ln, err := net.Listen("tcp", ":8257")
     if err != nil {
         panic(err)
     }

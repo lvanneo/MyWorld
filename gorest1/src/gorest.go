@@ -6,6 +6,8 @@ import (
     "net/http"
     "io/ioutil"
     "encoding/json"
+    "encoding/gob"
+//    "bytes"
 )
 
 type InfoObject struct{
@@ -34,12 +36,35 @@ func modifyuser(w http.ResponseWriter, r *http.Request) {
     if err != nil {
     	fmt.Printf("error")
     }
+    
+//    var network bytes.Buffer
+    dec2 := gob.NewDecoder(r.Body) 
+    
+    var q InfoObject
+	err = dec2.Decode(&q)
+	if err != nil {
+		//log.Fatal("decode error:", err)
+	}
+	fmt.Println("00: ", q)
+	fmt.Println(q.ProductName) 
+    
+//    fmt.Println(r.Status)
+    fmt.Println(string(input))
+    
     fmt.Printf("Post  %s  %s\n", uid, input)
 //    fmt.Printf("input : %s \n",input)
 //    fmt.Printf("%#v\n", input[0])
     var sss []byte = input[2:]
     //sss = "%7B%22ProductName%22%3A%22yuanzhifei89%22%2C%22Price%22%3A15.3%7D"
     
+    dec := json.NewDecoder(r.Body)
+    //enc := json.NewEncoder()
+    
+    var qq InfoObject
+    dec.Decode(&qq)
+    fmt.Println(qq.ProductName)
+    
+    fmt.Printf("%s",dec);
     
     var jsonInfo InfoObject
     json.Unmarshal(sss,&jsonInfo)

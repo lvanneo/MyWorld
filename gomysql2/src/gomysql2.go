@@ -18,6 +18,8 @@ func main() {
     }
     defer db.Close()
 
+	fmt.Println("db:", db)
+	
 	//插入数据
 	stmtIns, err := db.Prepare("INSERT INTO people(name,age) VALUES( ?, ? )" ) // ? = 占位符
 	if err != nil {

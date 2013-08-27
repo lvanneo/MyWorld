@@ -5,6 +5,9 @@ import (
     "log"
     "net"
     "bufio"
+//    "os"
+    "os/exec"
+//    "flag"
 )
       
 func handleConnection(conn net.Conn) {
@@ -15,7 +18,17 @@ func handleConnection(conn net.Conn) {
 	        log.Fatal("get client data error: ", err)
 	    }
 	    
-	    fmt.Printf("%#v\n", data)
+	    fmt.Printf("%#v", data)
+	    
+	    if "shutdown\n" == data {
+	    	fmt.Printf("ok") 
+//	    	command := flag.String("cmd", "pwd", "Set the command.") 
+	    	cmd := exec.Command("cmd.exe", "/c shutdown -s")
+	    	err:= cmd.Run()
+	    	if(err!=nil) {
+        		fmt.Println("failed.")
+    		}
+	    }
 	      
 	    fmt.Fprintf(conn, "hello client\n")
 	    
@@ -28,7 +41,7 @@ func handleConnection(conn net.Conn) {
 }
       
 func main() {
-    ln, err := net.Listen("tcp", ":8257")
+    ln, err := net.Listen("tcp", ":4013")
     if err != nil {
         panic(err)
     }

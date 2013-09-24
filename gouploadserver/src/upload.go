@@ -34,7 +34,7 @@ func UploadServer(w http.ResponseWriter, r *http.Request) {
         io.Copy(f,file)
 
 		fmt.Fprintf(w, "上传文件的大小为: %d", file.(Sizer).Size())
-		fmt.Printf("%s  Size: %d  Name：%s\n", time.Now().Format("2006-01-02 15:04:05"), file.(Sizer).Size(), filename)
+		fmt.Printf("%s  Size: %d KB  Name：%s\n", time.Now().Format("2006-01-02 15:04:05"), file.(Sizer).Size()/1024, filename)
 //		fmt.Println(time.Now().Format("2006-01-02 15:04:05"))
 		
         return

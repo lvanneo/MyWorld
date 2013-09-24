@@ -23,4 +23,39 @@
         android:layout_marginTop="22dp"
         android:text="Button" />
 
+    <Button
+        android:id="@+id/btn_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/butUpload"
+        android:layout_below="@+id/butUpload"
+        android:layout_marginTop="50dp"
+        android:text="开始录制" />
+
+    <Button
+        android:id="@+id/btn_end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/button1"
+        android:layout_alignBottom="@+id/button1"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="52dp"
+        android:text="结束录制" />
+    
+    <SurfaceView  
+    android:layout_width="fill_parent" 
+    android:layout_height="fill_parent" 
+    android:id="@+id/surfaceview"
+ />
+
+    <Button
+        android:id="@+id/butfenfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/btn_start"
+        android:layout_below="@+id/btn_start"
+        android:layout_marginLeft="36dp"
+        android:layout_marginTop="96dp"
+        android:text="FenFile" />
+
 </RelativeLayout>

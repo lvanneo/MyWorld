@@ -31,7 +31,7 @@ import android.widget.TextView;
 public class MainActivity extends Activity {
 	
 	private String newName = "psbe.jpg";
-    private String uploadFile = "/sdcard/123.zip";
+    private String uploadFile = "/sdcard/videoEngine.log";
     private String actionUrl = "http://192.168.1.3:8086/upload";
     private TextView mText1;
     private TextView mText2;
@@ -94,7 +94,7 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				Test.split(uploadFile, 1024 * 5);
+				Test.split(uploadFile, 1024 * 256);
 			}
 		});
 		

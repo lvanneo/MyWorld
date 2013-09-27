@@ -11,17 +11,21 @@ public class Test {
 		System.out.println();
 	}
 	
-	public static void main2(String[] args) {
+	public static void main(String[] args) {
 		byte[] bb = {'r','h','m'};
 		String ss = new String(bb);
 		System.out.println(ss);
+		
+		char cc = (char)6;
+		String str = "" + cc;
+		System.out.println(str);
 	}
 	
-	public static void main(String[] args) throws Exception {
-		Test.split("F:\\Temp\\wpfImage.zip", 1024 * 1024);
+	public static void main2(String[] args) throws Exception {
+		Test.split("F:\\Temp\\wpfImage.zip", "F:\\Temp\\wpfImage22.zip", 10, 1024 * 1024);
 	}
 	
-	public static void split(String file , int size)
+	public static void split(String file , String mergeFileName, int xiannum , int size)
 	{		
 		
 		RandomAccessFile raf;
@@ -35,10 +39,24 @@ public class Test {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		for (int i = 0; i < length; i+= size){
-			new Thread(new JavaFile(file, i, i + size)).start(); 
+		
+		int datasize = (int)length / xiannum;
+		
+		int seatNum = 0;
+		for (int i = 0; i < xiannum; i++){
+			if (i == xiannum){
+				new Thread(new JavaFile( size, i, file, mergeFileName, seatNum, length)).start(); 
+			}else{
+				new Thread(new JavaFile( size, i, file, mergeFileName, seatNum, i + datasize)).start(); 
+			}
+			seatNum += datasize;
 		}
+		
+		SocketClient socket = new SocketClient("192.168.1.5", 9090);
+    	socket.initSocket();
+    	char cxian = (char)xiannum;
+    	socket.sendMsg("fileover" + cxian + mergeFileName);
+    	socket.closeSocket();
 		
 	}
 	

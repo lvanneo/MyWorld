@@ -30,7 +30,7 @@ func main() {
 
 		fileName      = "node.exe" //待发送文件名称
 		mergeFileName = "mm.exe"   //待合并文件名称
-		xiecheng      = 10         //协程数量或拆分文件的数量
+		coroutine     = 10         //协程数量或拆分文件的数量
 		bufsize       = 1024       //单次发送数据的大小
 	)
 
@@ -50,7 +50,7 @@ func main() {
 		case 3:
 			bufsize, _ = strconv.Atoi(sargs)
 		case 4:
-			xiecheng, _ = strconv.Atoi(sargs)
+			coroutine, _ = strconv.Atoi(sargs)
 		}
 
 	}
@@ -76,7 +76,7 @@ func main() {
 	size = stat.Size()
 	fl.Close()
 
-	littleSize := size / int64(xiecheng)
+	littleSize := size / int64(coroutine)
 
 	fmt.Printf("Size: %d  %d \n", size, littleSize)
 
@@ -84,9 +84,9 @@ func main() {
 	//对待发送文件进行拆分计算并调用发送方法
 	c := make(chan string)
 	var begin int64 = 0
-	for i := 0; i < xiecheng; i++ {
+	for i := 0; i < coroutine; i++ {
 
-		if i == xiecheng-1 {
+		if i == coroutine-1 {
 			go splitFile(remote, c, i, bufsize, fileName, mergeFileName, begin, size)
 			fmt.Println(begin, size, bufsize)
 		} else {
@@ -98,7 +98,7 @@ func main() {
 	}
 
 	//同步等待发送文件的协程
-	for j := 0; j < xiecheng; j++ {
+	for j := 0; j < coroutine; j++ {
 		fmt.Println(<-c)
 	}
 
@@ -106,7 +106,7 @@ func main() {
 	sendtime := midtime - begintime
 	fmt.Printf("发送耗时：%d 分 %d 秒 \n", sendtime/60, sendtime%60)
 
-	sendMergeCommand(remote, mergeFileName, xiecheng) //发送文件合并指令及文件名
+	sendMergeCommand(remote, mergeFileName, coroutine) //发送文件合并指令及文件名
 	endtime := time.Now().Unix()
 
 	mergetime := endtime - midtime
@@ -123,15 +123,15 @@ func main() {
 *	李林
 *
 *	remote 服务端IP及端口号（如：192.168.1.8:9090）
-*	c		channel,用于同步协程
-*	xienum	协程顺序或拆分文件的顺序
-*	size	发送数据的大小
-*	fileName	待发送的文件名
+*	c				channel,用于同步协程
+*	coroutineNum	协程顺序或拆分文件的顺序
+*	size			发送数据的大小
+*	fileName		待发送的文件名
 *	mergeFileName	待合并的文件名
-*	begin	当前协程拆分待发送文件中的开始位置
-*	end		当前协程拆分待发送文件中的结束位置
+*	begin			当前协程拆分待发送文件中的开始位置
+*	end				当前协程拆分待发送文件中的结束位置
  */
-func splitFile(remote string, c chan string, xienum int, size int, fileName, mergeFileName string, begin int64, end int64) {
+func splitFile(remote string, c chan string, coroutineNum int, size int, fileName, mergeFileName string, begin int64, end int64) {
 
 	con, err := net.Dial("tcp", remote)
 	defer con.Close()
@@ -140,10 +140,10 @@ func splitFile(remote string, c chan string, xienum int, size int, fileName, mer
 		os.Exit(-1)
 		return
 	}
-	fmt.Println(xienum, "连接已建立.文件发送中...")
+	fmt.Println(coroutineNum, "连接已建立.文件发送中...")
 
 	var by [1]byte
-	by[0] = byte(xienum)
+	by[0] = byte(coroutineNum)
 	var bys []byte
 	databuf := bytes.NewBuffer(bys) //数据缓冲变量
 	databuf.Write(by[:])
@@ -183,7 +183,7 @@ func splitFile(remote string, c chan string, xienum int, size int, fileName, mer
 	for i := begin; int64(i) < end; i += int64(size) {
 		length, err := file.Read(buf) //读取数据到切片中
 		if err != nil {
-			fmt.Println("读文件错误", i, xienum, end)
+			fmt.Println("读文件错误", i, coroutineNum, end)
 		}
 
 		//判断读取的数据长度与切片的长度是否相等，如果不相等，表明文件读取已到末尾
@@ -225,9 +225,9 @@ func splitFile(remote string, c chan string, xienum int, size int, fileName, mer
 
 	}
 
-	fmt.Println(xienum, "发送数据(Byte)：", sendDtaTolNum)
+	fmt.Println(coroutineNum, "发送数据(Byte)：", sendDtaTolNum)
 
-	c <- strconv.Itoa(xienum) + " 协程退出"
+	c <- strconv.Itoa(coroutineNum) + " 协程退出"
 }
 
 /*
@@ -235,11 +235,11 @@ func splitFile(remote string, c chan string, xienum int, size int, fileName, mer
 *	2013-09-26
 *	李林
 *
-*	remote 服务端IP及端口号（如：192.168.1.8:9090）
+*	remote 			服务端IP及端口号（如：192.168.1.8:9090）
 *	mergeFileName	待合并的文件名
-*	xiecheng	拆分文件的总个数
+*	coroutine		拆分文件的总个数
  */
-func sendMergeCommand(remote, mergeFileName string, xiecheng int) {
+func sendMergeCommand(remote, mergeFileName string, coroutine int) {
 
 	con, err := net.Dial("tcp", remote)
 	defer con.Close()
@@ -251,7 +251,7 @@ func sendMergeCommand(remote, mergeFileName string, xiecheng int) {
 	fmt.Println("连接已建立. 发送合并指令.\n文件合并中...")
 
 	var by [1]byte
-	by[0] = byte(xiecheng)
+	by[0] = byte(coroutine)
 	var bys []byte
 	databuf := bytes.NewBuffer(bys) //数据缓冲变量
 	databuf.WriteString("fileover")

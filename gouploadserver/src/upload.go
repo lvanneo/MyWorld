@@ -59,6 +59,7 @@ func UploadServer(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	fmt.Println("拍照互一体机动服务端已启动。。。\n请不要关闭该窗体")
 	http.HandleFunc("/upload", UploadServer)
 	err := http.ListenAndServe(":8086", nil)
 	if err != nil {
